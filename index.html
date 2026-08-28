@@ -15,10 +15,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
+    overflow-x: hidden;
   }
 
-  /* ---------- LOADING SCREEN ---------- */
   #loader {
     position: fixed;
     inset: 0;
@@ -52,7 +51,6 @@
   }
   @keyframes pulse { 0%,100%{opacity:.4} 50%{opacity:1} }
 
-  /* ---------- MAIN CONTENT ---------- */
   main {
     text-align: center;
     padding: 40px 20px;
@@ -62,9 +60,13 @@
   }
   main.show { opacity: 1; transform: translateY(0); }
 
+  .avatar-wrap {
+    position: relative;
+    width: 130px; height: 130px;
+    margin: 0 auto 20px;
+  }
   .avatar {
-    width: 120px; height: 120px;
-    margin: 0 auto 24px;
+    width: 130px; height: 130px;
     border-radius: 50%;
     background: linear-gradient(135deg, #7c5cff, #4dd6ff);
     display: flex;
@@ -73,17 +75,114 @@
     font-size: 48px;
     font-weight: bold;
     color: #fff;
-    box-shadow: 0 0 40px rgba(124, 92, 255, 0.5);
+    box-shadow: 0 0 40px rgba(124, 92, 255, 0.4);
+    overflow: hidden;
+  }
+  .avatar img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+  .status-dot {
+    position: absolute;
+    bottom: 6px; right: 6px;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 4px solid #0b0b0f;
+    background: #747f8d;
+    transition: background 0.3s;
+  }
+  .status-dot.online { background: #43b581; }
+  .status-dot.idle { background: #faa61a; }
+  .status-dot.dnd { background: #f04747; }
+  .status-dot.offline { background: #747f8d; }
+
+  h1 { font-size: 2.2rem; margin-bottom: 4px; }
+  .handle { color: #8a8a99; margin-bottom: 12px; }
+
+  .activity {
+    background: #16161d;
+    border: 1px solid #2a2a35;
+    border-radius: 12px;
+    padding: 14px 20px;
+    margin: 0 auto 20px;
+    max-width: 360px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .activity .label {
+    color: #8a8a99;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .activity .game-name {
+    font-weight: 600;
+    color: #e6e6ea;
+  }
+  .activity .game-detail {
+    color: #aaa;
+    font-size: 13px;
   }
 
-  h1 { font-size: 2.4rem; margin-bottom: 8px; }
-  .handle { color: #8a8a99; margin-bottom: 32px; }
+  .badges-section {
+    margin: 0 auto 24px;
+    max-width: 400px;
+  }
+  .badges-section h3 {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #8a8a99;
+    margin-bottom: 10px;
+  }
+  .badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+  }
+  .badge {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    border: 2px solid #2a2a35;
+    padding: 4px;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .badge:hover {
+    transform: scale(1.15);
+    border-color: #7c5cff;
+  }
+  .badge img {
+    width: 100%; height: 100%;
+    border-radius: 50%;
+  }
+  .badge-tooltip {
+    position: relative;
+  }
+  .badge-tooltip::after {
+    content: attr(data-tip);
+    position: absolute;
+    bottom: 110%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1d1d27;
+    color: #e6e6ea;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .badge-tooltip:hover::after { opacity: 1; }
 
-  /* ---------- SOCIAL LINKS ---------- */
   .links {
     display: flex;
     flex-wrap: wrap;
-    gap: 16px;
+    gap: 14px;
     justify-content: center;
   }
   .links a {
@@ -92,10 +191,11 @@
     gap: 10px;
     background: #16161d;
     border: 1px solid #2a2a35;
-    padding: 14px 22px;
+    padding: 12px 20px;
     border-radius: 12px;
     color: #e6e6ea;
     text-decoration: none;
+    font-size: 14px;
     transition: transform 0.2s, border-color 0.2s, background 0.2s;
   }
   .links a:hover {
@@ -103,41 +203,54 @@
     border-color: #7c5cff;
     background: #1d1d27;
   }
-  .links svg { width: 22px; height: 22px; fill: currentColor; }
+  .links svg { width: 20px; height: 20px; fill: currentColor; }
   .links .email { color: #4dd6ff; }
 </style>
 </head>
 <body>
 
-  <!-- Loading animation -->
   <div id="loader">
     <div class="ring"></div>
     <div class="loader-text">Loading</div>
   </div>
 
-  
   <main id="content">
-    <div class="avatar">e</div>
-    <h1>echo</h1>
-    <p class="handle">link me</p>
+    <div class="avatar-wrap">
+      <div class="avatar" id="avatar">e</div>
+      <div class="status-dot" id="statusDot"></div>
+    </div>
+
+    <h1 id="displayName">echo</h1>
+    <p class="handle" id="statusText">Loading status...</p>
+
+    <div class="activity" id="activityBox" style="display:none;">
+      <div class="label" id="activityLabel">Playing</div>
+      <div class="game-name" id="activityName"></div>
+      <div class="game-detail" id="activityDetail"></div>
+    </div>
+
+    <div class="badges-section" id="badgesSection" style="display:none;">
+      <h3>Badges</h3>
+      <div class="badges" id="badgesContainer"></div>
+    </div>
 
     <div class="links">
-      <!-- Email -->
       <a class="email" href="mailto:echo@d6wo.cc">
         <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
         echo@d6wo.cc
       </a>
 
-      <!-- Discord (put your own invite/user link here) -->
       <a href="https://discord.com/users/788893081000345602">
         <svg viewBox="0 0 24 24"><path d="M20.32 4.37a19.8 19.8 0 0 0-4.89-1.52.07.07 0 0 0-.08.04c-.21.38-.44.87-.6 1.25a18.3 18.3 0 0 0-5.5 0 12.6 12.6 0 0 0-.61-1.25.08.08 0 0 0-.08-.04 19.7 19.7 0 0 0-4.88 1.52.07.07 0 0 0-.04.03C.53 9.05-.32 13.58.1 18.06c0 .02.01.04.03.05a19.9 19.9 0 0 0 6 3.03.08.08 0 0 0 .08-.03c.46-.63.87-1.3 1.22-2a.08.08 0 0 0-.04-.11 13 13 0 0 1-1.87-.9.08.08 0 0 1-.01-.12c.13-.1.25-.19.37-.29a.07.07 0 0 1 .08-.01c3.93 1.8 8.18 1.8 12.06 0a.07.07 0 0 1 .08 0c.12.1.25.2.37.3a.08.08 0 0 1 0 .12 12.3 12.3 0 0 1-1.88.89.08.08 0 0 0-.04.11c.36.7.77 1.37 1.22 2a.08.08 0 0 0 .08.03 19.8 19.8 0 0 0 6.02-3.03.08.08 0 0 0 .03-.05c.5-5.18-.84-9.68-3.55-13.66a.06.06 0 0 0-.03-.03zM8.02 15.33c-1.18 0-2.16-1.08-2.16-2.42 0-1.33.96-2.42 2.16-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.34-.96 2.42-2.16 2.42zm7.97 0c-1.18 0-2.15-1.08-2.15-2.42 0-1.33.95-2.42 2.15-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.34-.95 2.42-2.16 2.42z"/></svg>
         Discord
       </a>
 
-    
+      <a href="https://x.com/YOUR_HANDLE">
+        <svg viewBox="0 0 24 24"><path d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.66l-5.21-6.82-5.97 6.82H1.67l7.73-8.84L1.25 2.25h6.83l4.71 6.23 5.45-6.23zm-1.16 17.52h1.83L7.08 4.13H5.12l11.96 15.64z"/></svg>
+        X / Twitter
+      </a>
 
-      <!-- Instagram -->
-      <a href="https://instagram.com/opticwtw">
+      <a href="https://instagram.com/YOUR_HANDLE">
         <svg viewBox="0 0 24 24"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 0 1-1.38-.9 3.7 3.7 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41 1.27-.06 1.65-.07 4.85-.07M12 0C8.74 0 8.33.01 7.05.07 5.78.13 4.9.33 4.14.63a5.9 5.9 0 0 0-2.13 1.38A5.9 5.9 0 0 0 .63 4.14C.33 4.9.13 5.78.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.27.26 2.15.56 2.91.3.79.72 1.46 1.38 2.13a5.9 5.9 0 0 0 2.13 1.38c.76.3 1.64.5 2.91.56C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.27-.06 2.15-.26 2.91-.56a5.9 5.9 0 0 0 2.13-1.38 5.9 5.9 0 0 0 1.38-2.13c.3-.76.5-1.64.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.27-.26-2.15-.56-2.91a5.9 5.9 0 0 0-1.38-2.13A5.9 5.9 0 0 0 19.86.63c-.76-.3-1.64-.5-2.91-.56C15.67.01 15.26 0 12 0zm0 5.84A6.16 6.16 0 1 0 12 18.16 6.16 6.16 0 0 0 12 5.84zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm7.85-10.4a1.44 1.44 0 1 1-2.88 0 1.44 1.44 0 0 1 2.88 0z"/></svg>
         Instagram
       </a>
@@ -145,13 +258,131 @@
   </main>
 
 <script>
-  // Hide loader after a short delay
-  window.addEventListener('load', () => {
-    setTimeout(() => {
-      document.getElementById('loader').classList.add('hidden');
-      document.getElementById('content').classList.add('show');
-    }, 1800);
-  });
+const DISCORD_ID = '788893081000345602';
+
+const FLAG_MAP = {
+  1:      { name: 'Discord Staff',        icon: 'https://hyperbadges.com/api/badges/1/image' },
+  2:      { name: 'Partner',              icon: 'https://hyperbadges.com/api/badges/2/image' },
+  4:      { name: 'HypeSquad Events',     icon: 'https://hyperbadges.com/api/badges/4/image' },
+  8:      { name: 'Bug Hunter Level 1',   icon: 'https://hyperbadges.com/api/badges/8/image' },
+  64:     { name: 'House Bravery',        icon: 'https://hyperbadges.com/api/badges/64/image' },
+  128:    { name: 'House Brilliance',     icon: 'https://hyperbadges.com/api/badges/128/image' },
+  256:    { name: 'House Balance',        icon: 'https://hyperbadges.com/api/badges/256/image' },
+  512:    { name: 'Early Supporter',      icon: 'https://hyperbadges.com/api/badges/512/image' },
+  16384:  { name: 'Bug Hunter Level 2',   icon: 'https://hyperbadges.com/api/badges/16384/image' },
+  131072: { name: 'Early Bot Developer',  icon: 'https://hyperbadges.com/api/badges/131072/image' },
+  262144: { name: 'Active Developer',     icon: 'https://hyperbadges.com/api/badges/262144/image' },
+};
+
+const STATUS_LABELS = {
+  online:  'Online',
+  idle:    'Idle',
+  dnd:     'Do Not Disturb',
+  offline: 'Offline'
+};
+
+const ACTIVITY_TYPES = {
+  0: 'Playing',
+  2: 'Listening to',
+  3: 'Watching',
+  4: 'Custom Status',
+  5: 'Competing in'
+};
+
+function fetchPresence() {
+  return fetch(`https://api.lanyard.rest/v1/users/${DISCORD_ID}`)
+    .then(r => r.json())
+    .then(json => json.success ? json.data : null)
+    .catch(() => null);
+}
+
+function setAvatar(data) {
+  const avatarEl = document.getElementById('avatar');
+  if (data && data.discord_user && data.discord_user.avatar) {
+    const hash = data.discord_user.avatar;
+    const ext = hash.startsWith('a_') ? 'gif' : 'png';
+    avatarEl.innerHTML = `<img src="https://cdn.discordapp.com/avatars/${DISCORD_ID}/${hash}.${ext}?size=256" alt="avatar">`;
+  }
+}
+
+function setStatus(data) {
+  const dot = document.getElementById('statusDot');
+  const text = document.getElementById('statusText');
+  if (!data) {
+    dot.className = 'status-dot offline';
+    text.textContent = 'Offline';
+    return;
+  }
+  const status = data.discord_status || 'offline';
+  dot.className = `status-dot ${status}`;
+  text.textContent = STATUS_LABELS[status] || status;
+}
+
+function setActivity(data) {
+  const box = document.getElementById('activityBox');
+  if (!data || !data.activities || data.activities.length === 0) {
+    box.style.display = 'none';
+    return;
+  }
+  const act = data.activities.find(a => a.type === 0)
+    || data.activities.find(a => a.type === 2)
+    || data.activities.find(a => a.type === 3)
+    || data.activities.find(a => a.type === 4)
+    || data.activities[0];
+
+  if (!act || !act.name) { box.style.display = 'none'; return; }
+
+  box.style.display = 'block';
+  document.getElementById('activityLabel').textContent = ACTIVITY_TYPES[act.type] || 'Activity';
+  document.getElementById('activityName').textContent = act.name;
+  const detail = act.details || act.state || '';
+  document.getElementById('activityDetail').textContent = detail;
+}
+
+function setBadges(data) {
+  const section = document.getElementById('badgesSection');
+  const container = document.getElementById('badgesContainer');
+  if (!data || !data.discord_user || !data.discord_user.public_flags) {
+    section.style.display = 'none';
+    return;
+  }
+  const flags = data.discord_user.public_flags;
+  const earned = Object.entries(FLAG_MAP)
+    .filter(([bit]) => (flags & parseInt(bit)) === parseInt(bit));
+
+  if (earned.length === 0) { section.style.display = 'none'; return; }
+
+  section.style.display = 'block';
+  container.innerHTML = earned.map(([bit, info]) =>
+    `<div class="badge badge-tooltip" data-tip="${info.name}">
+      <img src="${info.icon}" alt="${info.name}" onerror="this.parentElement.style.display='none'">
+    </div>`
+  ).join('');
+}
+
+function setUsername(data) {
+  if (data && data.discord_user && data.discord_user.username) {
+    document.getElementById('displayName').textContent = data.discord_user.username;
+  }
+}
+
+async function update() {
+  const data = await fetchPresence();
+  setAvatar(data);
+  setStatus(data);
+  setActivity(data);
+  setBadges(data);
+  setUsername(data);
+}
+
+window.addEventListener('load', () => {
+  update();
+  setTimeout(() => {
+    document.getElementById('loader').classList.add('hidden');
+    document.getElementById('content').classList.add('show');
+  }, 1500);
+  setInterval(update, 30000);
+});
 </script>
 </body>
 </html>   
