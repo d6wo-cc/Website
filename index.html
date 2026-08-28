@@ -1,76 +1,157 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>echo</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    body {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: Arial, sans-serif;
-      background: #000;
-    }
+  body {
+    background: #0b0b0f;
+    color: #e6e6ea;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
 
-    .login-box {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 40px 30px;
-      border-radius: 10px;
-      width: 100%;
-      max-width: 350px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-      border: 1px solid rgba(255,255,255,0.1);
-    }
+  /* ---------- LOADING SCREEN ---------- */
+  #loader {
+    position: fixed;
+    inset: 0;
+    background: #0b0b0f;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    z-index: 999;
+    transition: opacity 0.8s ease, visibility 0.8s;
+  }
+  #loader.hidden { opacity: 0; visibility: hidden; }
 
-    .login-box h2 {
-      text-align: center;
-      margin-bottom: 24px;
-      color: #fff;
-    }
+  .ring {
+    width: 70px; height: 70px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    border-top-color: #7c5cff;
+    border-right-color: #4dd6ff;
+    animation: spin 1s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
 
-    .login-box input {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 16px;
-      border: 1px solid #444;
-      border-radius: 4px;
-      font-size: 14px;
-      background: #1a1a1a;
-      color: #fff;
-    }
+  .loader-text {
+    letter-spacing: 6px;
+    font-size: 14px;
+    text-transform: uppercase;
+    color: #8a8a99;
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:.4} 50%{opacity:1} }
 
-    .login-box input::placeholder {
-      color: #888;
-    }
+  /* ---------- MAIN CONTENT ---------- */
+  main {
+    text-align: center;
+    padding: 40px 20px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 1s ease, transform 1s ease;
+  }
+  main.show { opacity: 1; transform: translateY(0); }
 
-    .login-box button {
-      width: 100%;
-      padding: 12px;
-      background: #4a90e2;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      font-size: 16px;
-      cursor: pointer;
-    }
+  .avatar {
+    width: 120px; height: 120px;
+    margin: 0 auto 24px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #7c5cff, #4dd6ff);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    font-weight: bold;
+    color: #fff;
+    box-shadow: 0 0 40px rgba(124, 92, 255, 0.5);
+  }
 
-    .login-box button:hover {
-      background: #3a80d2;
-    }
-  </style>
+  h1 { font-size: 2.4rem; margin-bottom: 8px; }
+  .handle { color: #8a8a99; margin-bottom: 32px; }
+
+  /* ---------- SOCIAL LINKS ---------- */
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+  }
+  .links a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #16161d;
+    border: 1px solid #2a2a35;
+    padding: 14px 22px;
+    border-radius: 12px;
+    color: #e6e6ea;
+    text-decoration: none;
+    transition: transform 0.2s, border-color 0.2s, background 0.2s;
+  }
+  .links a:hover {
+    transform: translateY(-3px);
+    border-color: #7c5cff;
+    background: #1d1d27;
+  }
+  .links svg { width: 22px; height: 22px; fill: currentColor; }
+  .links .email { color: #4dd6ff; }
+</style>
 </head>
 <body>
-  <div class="login-box">
-    <h2>Login</h2>
-    <form action="/login" method="POST">
-      <input type="text" name="username" placeholder="Username" required>
-      <input type="text" name="password" placeholder="Password" required>
-      <button type="submit">Sign In</button>
-    </form>
+
+  <!-- Loading animation -->
+  <div id="loader">
+    <div class="ring"></div>
+    <div class="loader-text">Loading</div>
   </div>
+
+  
+  <main id="content">
+    <div class="avatar">e</div>
+    <h1>echo</h1>
+    <p class="handle">link me</p>
+
+    <div class="links">
+      <!-- Email -->
+      <a class="email" href="mailto:echo@d6wo.cc">
+        <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        echo@d6wo.cc
+      </a>
+
+      <!-- Discord (put your own invite/user link here) -->
+      <a href="https://discord.com/users/788893081000345602">
+        <svg viewBox="0 0 24 24"><path d="M20.32 4.37a19.8 19.8 0 0 0-4.89-1.52.07.07 0 0 0-.08.04c-.21.38-.44.87-.6 1.25a18.3 18.3 0 0 0-5.5 0 12.6 12.6 0 0 0-.61-1.25.08.08 0 0 0-.08-.04 19.7 19.7 0 0 0-4.88 1.52.07.07 0 0 0-.04.03C.53 9.05-.32 13.58.1 18.06c0 .02.01.04.03.05a19.9 19.9 0 0 0 6 3.03.08.08 0 0 0 .08-.03c.46-.63.87-1.3 1.22-2a.08.08 0 0 0-.04-.11 13 13 0 0 1-1.87-.9.08.08 0 0 1-.01-.12c.13-.1.25-.19.37-.29a.07.07 0 0 1 .08-.01c3.93 1.8 8.18 1.8 12.06 0a.07.07 0 0 1 .08 0c.12.1.25.2.37.3a.08.08 0 0 1 0 .12 12.3 12.3 0 0 1-1.88.89.08.08 0 0 0-.04.11c.36.7.77 1.37 1.22 2a.08.08 0 0 0 .08.03 19.8 19.8 0 0 0 6.02-3.03.08.08 0 0 0 .03-.05c.5-5.18-.84-9.68-3.55-13.66a.06.06 0 0 0-.03-.03zM8.02 15.33c-1.18 0-2.16-1.08-2.16-2.42 0-1.33.96-2.42 2.16-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.34-.96 2.42-2.16 2.42zm7.97 0c-1.18 0-2.15-1.08-2.15-2.42 0-1.33.95-2.42 2.15-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.34-.95 2.42-2.16 2.42z"/></svg>
+        Discord
+      </a>
+
+    
+
+      <!-- Instagram -->
+      <a href="https://instagram.com/opticwtw">
+        <svg viewBox="0 0 24 24"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 0 1-1.38-.9 3.7 3.7 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41 1.27-.06 1.65-.07 4.85-.07M12 0C8.74 0 8.33.01 7.05.07 5.78.13 4.9.33 4.14.63a5.9 5.9 0 0 0-2.13 1.38A5.9 5.9 0 0 0 .63 4.14C.33 4.9.13 5.78.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.27.26 2.15.56 2.91.3.79.72 1.46 1.38 2.13a5.9 5.9 0 0 0 2.13 1.38c.76.3 1.64.5 2.91.56C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.27-.06 2.15-.26 2.91-.56a5.9 5.9 0 0 0 2.13-1.38 5.9 5.9 0 0 0 1.38-2.13c.3-.76.5-1.64.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.27-.26-2.15-.56-2.91a5.9 5.9 0 0 0-1.38-2.13A5.9 5.9 0 0 0 19.86.63c-.76-.3-1.64-.5-2.91-.56C15.67.01 15.26 0 12 0zm0 5.84A6.16 6.16 0 1 0 12 18.16 6.16 6.16 0 0 0 12 5.84zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm7.85-10.4a1.44 1.44 0 1 1-2.88 0 1.44 1.44 0 0 1 2.88 0z"/></svg>
+        Instagram
+      </a>
+    </div>
+  </main>
+
+<script>
+  // Hide loader after a short delay
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      document.getElementById('loader').classList.add('hidden');
+      document.getElementById('content').classList.add('show');
+    }, 1800);
+  });
+</script>
 </body>
 </html>   
