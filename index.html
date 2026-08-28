@@ -1,275 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Echo | Security & Tooling</title>
-    <style>
-        :root {
-            --bg: #fcfbf9;
-            --text: #1a1a1a;
-            --muted: #666666;
-            --border: #e5e5e0;
-            --accent: #2b4c7e;
-            --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-            --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Arial, sans-serif;
+      background: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1920&q=80') no-repeat center center fixed;
+      background-size: cover;
+    }
 
-        body {
-            background-color: var(--bg);
-            color: var(--text);
-            font-family: var(--sans);
-            line-height: 1.6;
-            padding: 2rem 1rem;
-            max-width: 680px;
-            margin: 0 auto;
-        }
+    .login-box {
+      background: rgba(255, 255, 255, 0.85);
+      padding: 40px 30px;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 350px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
 
-        header {
-            margin-bottom: 3rem;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 1.5rem;
-        }
+    .login-box h2 {
+      text-align: center;
+      margin-bottom: 24px;
+      color: #333;
+    }
 
-        h1 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            letter-spacing: -0.01em;
-        }
+    .login-box input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+    }
 
-        .subtitle {
-            color: var(--muted);
-            font-size: 0.95rem;
-            margin-top: 0.2rem;
-        }
+    .login-box button {
+      width: 100%;
+      padding: 12px;
+      background: #4a90e2;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+    }
 
-        nav {
-            margin-top: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        nav a {
-            color: var(--accent);
-            text-decoration: none;
-            font-size: 0.9rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.3rem;
-        }
-
-        nav a:hover {
-            text-decoration: underline;
-        }
-
-        section {
-            margin-bottom: 3rem;
-        }
-
-        h2 {
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--muted);
-            margin-bottom: 1rem;
-            font-family: var(--mono);
-        }
-
-        .bio {
-            font-size: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .work-item {
-            margin-bottom: 1.75rem;
-        }
-
-        .work-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            margin-bottom: 0.25rem;
-        }
-
-        .work-title {
-            font-weight: 600;
-            font-size: 1rem;
-            color: var(--text);
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
-
-        .work-title:hover {
-            color: var(--accent);
-        }
-
-        .work-date {
-            font-family: var(--mono);
-            font-size: 0.8rem;
-            color: var(--muted);
-        }
-
-        .work-desc {
-            font-size: 0.92rem;
-            color: #333333;
-        }
-
-        .tag {
-            display: inline-block;
-            font-family: var(--mono);
-            font-size: 0.75rem;
-            background: #f0efe9;
-            padding: 0.1rem 0.4rem;
-            border-radius: 3px;
-            margin-top: 0.4rem;
-            color: #444;
-        }
-
-        ul.notes {
-            list-style-type: square;
-            padding-left: 1.2rem;
-        }
-
-        ul.notes li {
-            margin-bottom: 0.5rem;
-            font-size: 0.95rem;
-        }
-
-        .icon {
-            width: 16px;
-            height: 16px;
-            fill: currentColor;
-            vertical-align: middle;
-            display: inline-block;
-        }
-
-        .contact-list {
-            list-style: none;
-            padding: 0;
-            font-size: 0.92rem;
-        }
-
-        .contact-list li {
-            margin-bottom: 0.4rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        footer {
-            margin-top: 4rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--border);
-            font-size: 0.85rem;
-            color: var(--muted);
-            display: flex;
-            justify-content: space-between;
-        }
-
-        footer a {
-            color: var(--muted);
-        }
-    </style>
+    .login-box button:hover {
+      background: #3a80d2;
+    }
+  </style>
 </head>
 <body>
-
-    <header>
-        <h1>Echo</h1>
-        <p class="subtitle">I break things on local networks, write CLI tools, and publish notes when I find something weird.</p>
-        <nav>
-            <a href="#projects">Code</a>
-            <a href="#writeups">Notes</a>
-            <a href="#contact">Contact</a>
-            <a href="https://github.com/pawnderspalace" target="_blank" rel="noopener">
-                <svg class="icon" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-                GitHub
-            </a>
-        </nav>
-    </header>
-
-    <main>
-        <section class="bio">
-            <p>I mostly spend my time messing around with Active Directory misconfigurations, writing small Win32 utilities, and doing HTB boxes. Most of my scripts start as single-file hacks to solve one specific problem during an assessment.</p>
-        </section>
-
-        <section id="projects">
-            <h2>Projects</h2>
-            
-            <article class="work-item">
-                <div class="work-header">
-                    <a href="https://github.com/pawnderspalace" class="work-title" target="_blank" rel="noopener">
-                        <svg class="icon" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-                        GhostTrace
-                    </a>
-                    <span class="work-date">2026</span>
-                </div>
-                <p class="work-desc">Tiny C utility to dump unhooked NTDLL functions from fresh process memory. Built it because I got tired of manually checking which WinAPI calls our AV was patching in lab tests.</p>
-                <span class="tag">C</span> <span class="tag">Win32</span>
-            </article>
-
-            <article class="work-item">
-                <div class="work-header">
-                    <a href="https://github.com/pawnderspalace" class="work-title" target="_blank" rel="noopener">
-                        <svg class="icon" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-                        KerbParse
-                    </a>
-                    <span class="work-date">2025</span>
-                </div>
-                <p class="work-desc">Parses local `.kirbi` and `.ccache` files without pulling in heavy dependencies. Prints out expiration times, encryption types, and flags RC4 usage in plain text.</p>
-                <span class="tag">Go</span> <span class="tag">Active Directory</span>
-            </article>
-
-            <article class="work-item">
-                <div class="work-header">
-                    <a href="https://github.com/pawnderspalace" class="work-title" target="_blank" rel="noopener">
-                        <svg class="icon" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-                        S3-Audit-Cli
-                    </a>
-                    <span class="work-date">2024</span>
-                </div>
-                <p class="work-desc">Python script that loops through AWS accounts to catch world-readable S3 buckets and bad ACLs. Fast, zero extra pip packages required.</p>
-                <span class="tag">Python</span> <span class="tag">AWS</span>
-            </article>
-        </section>
-
-        <section id="writeups">
-            <h2>Notes & Writeups</h2>
-            <ul class="notes">
-                <li><a href="#">Bypassing user-mode hooks with dynamic syscall numbers</a> <span class="work-date">(May 2026)</span></li>
-                <li><a href="#">Finding hidden DACL write permissions in large AD domains</a> <span class="work-date">(Dec 2025)</span></li>
-                <li><a href="#">HTB Machine Notes (Season 4 & 5)</a> <span class="work-date">(Archive)</span></li>
-            </ul>
-        </section>
-
-        <section id="contact">
-            <h2>Contact</h2>
-            <p class="work-desc">Reach out if you want to swap notes on offensive security or need someone to take a look at a weird bug.</p>
-            <ul class="contact-list" style="margin-top: 0.75rem;">
-                <li>
-                    <svg class="icon" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-                    <strong>GitHub:</strong> <a href="https://github.com/pawnderspalace" target="_blank" rel="noopener">github.com/pawnderspalace</a>
-                </li>
-                <li>
-                    <svg class="icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-                    <strong>Email:</strong> echo [at] pawnderspalace.com
-                </li>
-            </ul>
-        </section>
-    </main>
-
-    <footer>
-        <span>Echo</span>
-        <span>Built with plain HTML & CSS</span>
-    </footer>
-
+  <div class="login-box">
+    <h2>Login</h2>
+    <form action="/login" method="POST">
+      <input type="email" name="email" placeholder="Email" required>
+      <input type="password" name="password" placeholder="Password" required>
+      <button type="submit">Sign In</button>
+    </form>
+  </div>
 </body>
-</html>
+</html>   
