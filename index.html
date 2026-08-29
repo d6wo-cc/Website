@@ -13,6 +13,7 @@
     font-family: 'Segoe UI', system-ui, sans-serif;
     min-height: 100vh;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     overflow-x: hidden;
@@ -51,14 +52,48 @@
   }
   @keyframes pulse { 0%,100%{opacity:.4} 50%{opacity:1} }
 
-  main {
+  nav {
+    position: fixed;
+    top: 20px;
+    display: flex;
+    gap: 12px;
+    z-index: 100;
+  }
+  nav button {
+    background: #16161d;
+    border: 1px solid #2a2a35;
+    color: #8a8a99;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  nav button:hover {
+    color: #e6e6ea;
+    border-color: #7c5cff;
+  }
+  nav button.active {
+    background: #7c5cff;
+    color: #fff;
+    border-color: #7c5cff;
+  }
+
+  .page {
+    display: none;
     text-align: center;
     padding: 40px 20px;
     opacity: 0;
     transform: translateY(20px);
-    transition: opacity 1s ease, transform 1s ease;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    max-width: 500px;
+    width: 100%;
   }
-  main.show { opacity: 1; transform: translateY(0); }
+  .page.active {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+  }
 
   .avatar-wrap {
     position: relative;
@@ -205,6 +240,22 @@
   }
   .links svg { width: 20px; height: 20px; fill: currentColor; }
   .links .email { color: #4dd6ff; }
+
+  .about-card {
+    background: #16161d;
+    border: 1px solid #2a2a35;
+    border-radius: 16px;
+    padding: 30px 24px;
+    margin-top: 20px;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #ccc;
+  }
+  .about-card h2 {
+    color: #e6e6ea;
+    margin-bottom: 12px;
+    font-size: 1.8rem;
+  }
 </style>
 </head>
 <body>
@@ -214,7 +265,12 @@
     <div class="loader-text">Loading</div>
   </div>
 
-  <main id="content">
+  <nav>
+    <button class="active" onclick="switchTab('home')">Home</button>
+    <button onclick="switchTab('about')">About Me</button>
+  </nav>
+
+  <main id="home" class="page active">
     <div class="avatar-wrap">
       <div class="avatar" id="avatar">e</div>
       <div class="status-dot" id="statusDot"></div>
@@ -252,6 +308,13 @@
     </div>
   </main>
 
+  <main id="about" class="page">
+    <div class="about-card">
+      <h2>About Me</h2>
+      <p>Hello, I am Gauge. I like to play games, play sports, and code in my free time.</p>
+    </div>
+  </main>
+
 <script>
 const DISCORD_ID = '788893081000345602';
 
@@ -265,7 +328,7 @@ const FLAG_MAP = {
   256:    { name: 'House Balance',        icon: 'https://hyperbadges.com/api/badges/256/image' },
   512:    { name: 'Early Supporter',      icon: 'https://hyperbadges.com/api/badges/512/image' },
   16384:  { name: 'Bug Hunter Level 2',   icon: 'https://hyperbadges.com/api/badges/16384/image' },
-  131072: { name: 'Early Bot Developer',  icon: 'https://hyperbadges.com/api/badges/131072/image' },
+  131072: { name: 'Early Bot Developer', icon: 'https://hyperbadges.com/api/badges/131072/image' },
   262144: { name: 'Active Developer',     icon: 'https://hyperbadges.com/api/badges/262144/image' },
 };
 
@@ -283,6 +346,14 @@ const ACTIVITY_TYPES = {
   4: 'Custom Status',
   5: 'Competing in'
 };
+
+function switchTab(tabId) {
+  document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
+
+  document.getElementById(tabId).classList.add('active');
+  event.target.classList.add('active');
+}
 
 function fetchPresence() {
   return fetch(`https://api.lanyard.rest/v1/users/${DISCORD_ID}`)
@@ -374,10 +445,9 @@ window.addEventListener('load', () => {
   update();
   setTimeout(() => {
     document.getElementById('loader').classList.add('hidden');
-    document.getElementById('content').classList.add('show');
   }, 1500);
   setInterval(update, 30000);
 });
 </script>
 </body>
-</html>   
+</html>
