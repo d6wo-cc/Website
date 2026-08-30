@@ -277,7 +277,6 @@
     object-fit: cover;
     display: block;
   }
-  /* Specific adjustment for Fortnite SVG scaling */
   .game-item img.fortnite-img {
     object-fit: contain;
     padding: 12px;
@@ -294,25 +293,33 @@
   .project-box {
     background: #111116;
     border: 1px solid #2a2a35;
-    border-radius: 12px;
-    padding: 24px 16px;
+    border-radius: 10px;
+    overflow: hidden;
     text-align: center;
     cursor: pointer;
-    transition: border-color 0.2s, transform 0.2s, background 0.2s;
+    transition: border-color 0.2s, transform 0.2s;
   }
   .project-box:hover {
     border-color: #7c5cff;
-    transform: translateY(-3px);
-    background: #181820;
+    transform: translateY(-2px);
+  }
+  .project-box img {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    display: block;
+  }
+  .project-info {
+    padding: 10px 8px;
   }
   .project-box h3 {
     color: #e6e6ea;
-    font-size: 1.2rem;
-    margin-bottom: 6px;
+    font-size: 0.95rem;
+    margin-bottom: 2px;
   }
   .project-box span {
     color: #7c5cff;
-    font-size: 12px;
+    font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 1px;
     font-weight: 600;
@@ -405,12 +412,18 @@
         <p>Select a game below to view available downloads.</p>
         <div class="projects-grid">
           <div class="project-box" onclick="alert('CS2 Downloads Coming Soon!')">
-            <h3>CS2</h3>
-            <span>Coming Soon</span>
+            <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/730/header.jpg" alt="Counter-Strike 2">
+            <div class="project-info">
+              <h3>CS2</h3>
+              <span>Coming Soon</span>
+            </div>
           </div>
           <div class="project-box" onclick="alert('R6 Downloads Coming Soon!')">
-            <h3>R6</h3>
-            <span>Coming Soon</span>
+            <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/359550/header.jpg" alt="Rainbow Six Siege">
+            <div class="project-info">
+              <h3>R6</h3>
+              <span>Coming Soon</span>
+            </div>
           </div>
         </div>
       </div>
