@@ -226,7 +226,7 @@
   .links svg { width: 20px; height: 20px; fill: currentColor; }
   .links .email { color: #4dd6ff; }
 
-  .about-card {
+  .about-card, .projects-card {
     background: #16161d;
     border: 1px solid #2a2a35;
     border-radius: 16px;
@@ -236,13 +236,13 @@
     color: #ccc;
     text-align: left;
   }
-  .about-card h2 {
+  .about-card h2, .projects-card h2 {
     color: #e6e6ea;
     margin-bottom: 12px;
     font-size: 1.8rem;
     text-align: center;
   }
-  .about-card p {
+  .about-card p, .projects-card p {
     margin-bottom: 20px;
     text-align: center;
   }
@@ -254,7 +254,7 @@
     margin-bottom: 12px;
     text-align: center;
   }
-  .games-grid {
+  .games-grid, .projects-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
@@ -277,12 +277,45 @@
     object-fit: cover;
     display: block;
   }
+  /* Specific adjustment for Fortnite SVG scaling */
+  .game-item img.fortnite-img {
+    object-fit: contain;
+    padding: 12px;
+    background: #1b1b22;
+  }
   .game-item span {
     display: block;
     padding: 10px 8px;
     font-weight: 600;
     color: #e6e6ea;
     font-size: 13px;
+  }
+
+  .project-box {
+    background: #111116;
+    border: 1px solid #2a2a35;
+    border-radius: 12px;
+    padding: 24px 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.2s, background 0.2s;
+  }
+  .project-box:hover {
+    border-color: #7c5cff;
+    transform: translateY(-3px);
+    background: #181820;
+  }
+  .project-box h3 {
+    color: #e6e6ea;
+    font-size: 1.2rem;
+    margin-bottom: 6px;
+  }
+  .project-box span {
+    color: #7c5cff;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
   }
 </style>
 </head>
@@ -296,6 +329,7 @@
   <nav>
     <button class="active" onclick="switchTab('home', this)">Home</button>
     <button onclick="switchTab('about', this)">About Me</button>
+    <button onclick="switchTab('projects', this)">Projects</button>
   </nav>
 
   <div class="view-container">
@@ -349,7 +383,7 @@
               <span>Counter-Strike 2</span>
             </div>
             <div class="game-item">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/0/0e/FortniteLogo.svg" alt="Fortnite">
+              <img class="fortnite-img" src="https://upload.wikimedia.org/wikipedia/commons/0/0e/FortniteLogo.svg" alt="Fortnite">
               <span>Fortnite</span>
             </div>
             <div class="game-item">
@@ -360,6 +394,23 @@
               <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/252490/header.jpg" alt="Rust">
               <span>Rust</span>
             </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <main id="projects" class="page">
+      <div class="projects-card">
+        <h2>Projects</h2>
+        <p>Select a game below to view available downloads.</p>
+        <div class="projects-grid">
+          <div class="project-box" onclick="alert('CS2 Downloads Coming Soon!')">
+            <h3>CS2</h3>
+            <span>Coming Soon</span>
+          </div>
+          <div class="project-box" onclick="alert('R6 Downloads Coming Soon!')">
+            <h3>R6</h3>
+            <span>Coming Soon</span>
           </div>
         </div>
       </div>
