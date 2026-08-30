@@ -83,7 +83,7 @@
     position: relative;
     width: 100%;
     max-width: 500px;
-    min-height: 480px;
+    min-height: 560px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -173,6 +173,49 @@
   .activity .game-detail {
     color: #aaa;
     font-size: 13px;
+  }
+
+  .promo-banner {
+    margin: 0 auto 8px;
+    max-width: 360px;
+    border-radius: 14px 14px 0 0;
+    overflow: hidden;
+    border: 1px solid #2a2a35;
+    border-bottom: none;
+    transition: transform 0.2s, border-color 0.2s;
+    display: block;
+  }
+  .promo-banner:hover {
+    border-color: #ff6b35;
+  }
+  .promo-banner img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .cheap-games-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 0 auto 20px;
+    max-width: 360px;
+    background: #ff6b35;
+    color: #fff;
+    font-weight: 700;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 12px;
+    border-radius: 0 0 14px 14px;
+    text-decoration: none;
+    border: 1px solid #ff6b35;
+    transition: transform 0.2s, background-color 0.2s;
+  }
+  .cheap-games-btn:hover {
+    background: #e85a24;
+    transform: translateY(-2px);
   }
 
   .links {
@@ -278,6 +321,13 @@
         <div class="game-name" id="activityName"></div>
         <div class="game-detail" id="activityDetail"></div>
       </div>
+
+      <a href="https://www.instant-gaming.com/?igr=nydo" target="_blank" rel="noopener noreferrer" class="promo-banner">
+        <img src="Generic - Games - DiscountEN-3.png" alt="Instant Gaming - Up to -80% in Video Games">
+      </a>
+      <a href="https://www.instant-gaming.com/?igr=nydo" target="_blank" rel="noopener noreferrer" class="cheap-games-btn">
+        Get Games For Cheap
+      </a>
 
       <div class="links">
         <a class="email" href="mailto:echo@d6wo.cc">
