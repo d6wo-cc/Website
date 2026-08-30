@@ -257,21 +257,32 @@
   .games-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
+    gap: 12px;
   }
   .game-item {
     background: #111116;
     border: 1px solid #2a2a35;
     border-radius: 10px;
-    padding: 12px;
+    overflow: hidden;
     text-align: center;
-    font-weight: 600;
-    color: #e6e6ea;
     transition: border-color 0.2s, transform 0.2s;
   }
   .game-item:hover {
     border-color: #7c5cff;
     transform: translateY(-2px);
+  }
+  .game-item img {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    display: block;
+  }
+  .game-item span {
+    display: block;
+    padding: 10px 8px;
+    font-weight: 600;
+    color: #e6e6ea;
+    font-size: 13px;
   }
 </style>
 </head>
@@ -333,10 +344,22 @@
         <div class="games-section">
           <h3>Top Games</h3>
           <div class="games-grid">
-            <div class="game-item">Counter-Strike 2</div>
-            <div class="game-item">Fortnite</div>
-            <div class="game-item">Call of Duty</div>
-            <div class="game-item">Rust</div>
+            <div class="game-item">
+              <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/730/header.jpg" alt="Counter-Strike 2">
+              <span>Counter-Strike 2</span>
+            </div>
+            <div class="game-item">
+              <img src="https://cdn2.unrealengine.com/14br-generic-social-1920x1080-261548470.jpg" alt="Fortnite">
+              <span>Fortnite</span>
+            </div>
+            <div class="game-item">
+              <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/1938090/header.jpg" alt="Call of Duty">
+              <span>Call of Duty</span>
+            </div>
+            <div class="game-item">
+              <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/252490/header.jpg" alt="Rust">
+              <span>Rust</span>
+            </div>
           </div>
         </div>
       </div>
