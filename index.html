@@ -324,6 +324,73 @@
     letter-spacing: 1px;
     font-weight: 600;
   }
+
+  .back-btn {
+    background: transparent;
+    border: none;
+    color: #7c5cff;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .back-btn:hover {
+    text-decoration: underline;
+  }
+
+  .shop-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 10px;
+  }
+  .shop-item {
+    background: #111116;
+    border: 1px solid #2a2a35;
+    border-radius: 10px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .shop-item-info {
+    text-align: left;
+  }
+  .shop-item-info h4 {
+    color: #e6e6ea;
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+  .shop-item-info p {
+    color: #8a8a99;
+    font-size: 12px;
+    margin: 0;
+    text-align: left;
+  }
+  .buy-btn {
+    background: #7c5cff;
+    color: #fff;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: background 0.2s;
+  }
+  .buy-btn:hover {
+    background: #6342f5;
+  }
+  .empty-msg {
+    text-align: center;
+    color: #8a8a99;
+    font-size: 14px;
+    padding: 20px 0;
+  }
 </style>
 </head>
 <body>
@@ -336,7 +403,7 @@
   <nav>
     <button class="active" onclick="switchTab('home', this)">Home</button>
     <button onclick="switchTab('about', this)">About Me</button>
-    <button onclick="switchTab('projects', this)">Projects</button>
+    <button onclick="switchTab('shop', this)">Shop</button>
   </nav>
 
   <div class="view-container">
@@ -406,25 +473,33 @@
       </div>
     </main>
 
-    <main id="projects" class="page">
+    <main id="shop" class="page">
       <div class="projects-card">
-        <h2>Projects</h2>
-        <p>Select a game below to view available downloads.</p>
-        <div class="projects-grid">
-          <div class="project-box" onclick="alert('CS2 Downloads Coming Soon!')">
-            <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/730/header.jpg" alt="Counter-Strike 2">
-            <div class="project-info">
-              <h3>CS2</h3>
-              <span>Coming Soon</span>
+        <div id="shopMainView">
+          <h2>Shop</h2>
+          <p>Select a game below to view available products.</p>
+          <div class="projects-grid">
+            <div class="project-box" onclick="openGameShop('cs2')">
+              <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/730/header.jpg" alt="Counter-Strike 2">
+              <div class="project-info">
+                <h3>CS2</h3>
+                <span>View Products</span>
+              </div>
+            </div>
+            <div class="project-box" onclick="openGameShop('r6')">
+              <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/359550/header.jpg" alt="Rainbow Six Siege">
+              <div class="project-info">
+                <h3>R6</h3>
+                <span>View Products</span>
+              </div>
             </div>
           </div>
-          <div class="project-box" onclick="alert('R6 Downloads Coming Soon!')">
-            <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/359550/header.jpg" alt="Rainbow Six Siege">
-            <div class="project-info">
-              <h3>R6</h3>
-              <span>Coming Soon</span>
-            </div>
-          </div>
+        </div>
+
+        <div id="shopDetailView" style="display: none;">
+          <button class="back-btn" onclick="closeGameShop()">&#8592; Back to Shop</button>
+          <h2 id="selectedGameTitle">Game</h2>
+          <div id="shopProductsList"></div>
         </div>
       </div>
     </main>
@@ -454,6 +529,39 @@ function switchTab(tabId, btn) {
 
   document.getElementById(tabId).classList.add('active');
   btn.classList.add('active');
+}
+
+function openGameShop(gameKey) {
+  const mainView = document.getElementById('shopMainView');
+  const detailView = document.getElementById('shopDetailView');
+  const title = document.getElementById('selectedGameTitle');
+  const list = document.getElementById('shopProductsList');
+
+  mainView.style.display = 'none';
+  detailView.style.display = 'block';
+
+  if (gameKey === 'cs2') {
+    title.textContent = 'Counter-Strike 2';
+    list.innerHTML = `
+      <div class="shop-list">
+        <div class="shop-item">
+          <div class="shop-item-info">
+            <h4>1K+ Hour Account</h4>
+            <p>CS2 account with over 1,000 recorded hours.</p>
+          </div>
+          <a class="buy-btn" href="https://whop.com/d6wo-selling/counter-strike-account-1k-hours/" target="_blank" rel="noopener noreferrer">Buy Now</a>
+        </div>
+      </div>
+    `;
+  } else if (gameKey === 'r6') {
+    title.textContent = 'Rainbow Six Siege';
+    list.innerHTML = `<div class="empty-msg">No products available at the moment. Check back soon!</div>`;
+  }
+}
+
+function closeGameShop() {
+  document.getElementById('shopMainView').style.display = 'block';
+  document.getElementById('shopDetailView').style.display = 'none';
 }
 
 function fetchPresence() {
