@@ -1,572 +1,1279 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>echo</title>
+
 <style>
+
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
+
+
   body {
+
     background: #0b0b0f;
+
     color: #e6e6ea;
+
     font-family: 'Segoe UI', system-ui, sans-serif;
+
     min-height: 100vh;
+
     display: flex;
+
     flex-direction: column;
+
     align-items: center;
+
     justify-content: center;
+
     overflow-x: hidden;
+
   }
+
+
 
   #loader {
+
     position: fixed;
+
     inset: 0;
+
     background: #0b0b0f;
+
     display: flex;
+
     flex-direction: column;
+
     align-items: center;
+
     justify-content: center;
+
     gap: 24px;
+
     z-index: 999;
+
     transition: opacity 0.8s ease, visibility 0.8s;
+
   }
+
   #loader.hidden { opacity: 0; visibility: hidden; }
 
+
+
   .ring {
+
     width: 70px; height: 70px;
+
     border-radius: 50%;
+
     border: 3px solid transparent;
+
     border-top-color: #7c5cff;
+
     border-right-color: #4dd6ff;
+
     animation: spin 1s linear infinite;
+
   }
+
   @keyframes spin { to { transform: rotate(360deg); } }
 
+
+
   .loader-text {
+
     letter-spacing: 6px;
+
     font-size: 14px;
+
     text-transform: uppercase;
+
     color: #8a8a99;
+
     animation: pulse 1.4s ease-in-out infinite;
+
   }
+
   @keyframes pulse { 0%,100%{opacity:.4} 50%{opacity:1} }
 
+
+
   nav {
+
     position: fixed;
+
     top: 20px;
+
     display: flex;
+
     gap: 12px;
+
     z-index: 100;
+
   }
+
   nav button {
+
     background: #16161d;
+
     border: 1px solid #2a2a35;
+
     color: #8a8a99;
+
     padding: 8px 16px;
+
     border-radius: 20px;
+
     font-size: 14px;
+
     cursor: pointer;
+
     transition: all 0.3s ease;
+
   }
+
   nav button:hover {
+
     color: #e6e6ea;
+
     border-color: #7c5cff;
+
   }
+
   nav button.active {
+
     background: #7c5cff;
+
     color: #fff;
+
     border-color: #7c5cff;
+
   }
+
+
 
   .view-container {
+
     position: relative;
+
     width: 100%;
+
     max-width: 500px;
+
     min-height: 520px;
+
     display: flex;
+
     align-items: center;
+
     justify-content: center;
+
   }
+
+
 
   .page {
+
     position: absolute;
+
     width: 100%;
+
     text-align: center;
+
     padding: 40px 20px;
+
     opacity: 0;
+
     visibility: hidden;
+
     transform: translateY(20px) scale(0.98);
+
     transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+
                 transform 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+
                 visibility 0.5s;
+
     pointer-events: none;
+
   }
+
   .page.active {
+
     opacity: 1;
+
     visibility: visible;
+
     transform: translateY(0) scale(1);
+
     pointer-events: auto;
+
   }
+
+
 
   .avatar-wrap {
+
     position: relative;
+
     width: 130px; height: 130px;
+
     margin: 0 auto 20px;
+
   }
+
   .avatar {
+
     width: 130px; height: 130px;
+
     border-radius: 50%;
+
     background: linear-gradient(135deg, #7c5cff, #4dd6ff);
+
     display: flex;
+
     align-items: center;
+
     justify-content: center;
+
     font-size: 48px;
+
     font-weight: bold;
+
     color: #fff;
+
     box-shadow: 0 0 40px rgba(124, 92, 255, 0.4);
+
     overflow: hidden;
+
   }
+
   .avatar img {
+
     width: 100%; height: 100%;
+
     object-fit: cover;
+
     border-radius: 50%;
+
   }
+
   .status-dot {
+
     position: absolute;
+
     bottom: 6px; right: 6px;
+
     width: 28px; height: 28px;
+
     border-radius: 50%;
+
     border: 4px solid #0b0b0f;
+
     background: #747f8d;
+
     transition: background 0.3s;
+
   }
+
   .status-dot.online { background: #43b581; }
+
   .status-dot.idle { background: #faa61a; }
+
   .status-dot.dnd { background: #f04747; }
+
   .status-dot.offline { background: #747f8d; }
 
+
+
   h1 { font-size: 2.2rem; margin-bottom: 4px; }
+
   .handle { color: #8a8a99; margin-bottom: 12px; }
 
+
+
   .activity {
+
     background: #16161d;
+
     border: 1px solid #2a2a35;
+
     border-radius: 12px;
+
     padding: 14px 20px;
+
     margin: 0 auto 20px;
+
     max-width: 360px;
+
     font-size: 14px;
+
     line-height: 1.6;
+
   }
+
   .activity .label {
+
     color: #8a8a99;
+
     font-size: 12px;
+
     text-transform: uppercase;
+
     letter-spacing: 1px;
+
     margin-bottom: 4px;
+
   }
+
   .activity .game-name {
+
     font-weight: 600;
+
     color: #e6e6ea;
+
   }
+
   .activity .game-detail {
+
     color: #aaa;
+
     font-size: 13px;
+
   }
+
+
 
   .cheap-games-btn {
+
     display: flex;
+
     align-items: center;
+
     justify-content: center;
+
     gap: 8px;
+
     margin: 0 auto 20px;
+
     max-width: 360px;
+
     background: #ff6b35;
+
     color: #fff;
+
     font-weight: 700;
+
     font-size: 15px;
+
     text-transform: uppercase;
+
     letter-spacing: 1px;
+
     padding: 14px 20px;
+
     border-radius: 12px;
+
     text-decoration: none;
+
     border: 1px solid #ff6b35;
+
     transition: transform 0.2s, background-color 0.2s;
+
   }
+
   .cheap-games-btn:hover {
+
     background: #e85a24;
+
     transform: translateY(-2px);
+
   }
+
+
 
   .links {
+
     display: flex;
+
     flex-wrap: wrap;
+
     gap: 14px;
+
     justify-content: center;
+
   }
+
   .links a {
+
     display: flex;
+
     align-items: center;
+
     gap: 10px;
+
     background: #16161d;
+
     border: 1px solid #2a2a35;
+
     padding: 12px 20px;
+
     border-radius: 12px;
+
     color: #e6e6ea;
+
     text-decoration: none;
+
     font-size: 14px;
+
     transition: transform 0.2s, border-color 0.2s, background 0.2s;
+
   }
+
   .links a:hover {
+
     transform: translateY(-3px);
+
     border-color: #7c5cff;
+
     background: #1d1d27;
+
   }
+
   .links svg { width: 20px; height: 20px; fill: currentColor; }
+
   .links .email { color: #4dd6ff; }
 
-  .projects-card {
+
+
+  .about-card, .projects-card {
+
     background: #16161d;
+
     border: 1px solid #2a2a35;
+
     border-radius: 16px;
+
     padding: 30px 24px;
+
     font-size: 15px;
+
     line-height: 1.6;
+
     color: #ccc;
+
     text-align: left;
-    width: 100%;
+
   }
-  .projects-card h2 {
+
+  .about-card h2, .projects-card h2 {
+
     color: #e6e6ea;
+
     margin-bottom: 12px;
+
     font-size: 1.8rem;
+
     text-align: center;
+
   }
-  .projects-card p {
+
+  .about-card p, .projects-card p {
+
     margin-bottom: 20px;
+
     text-align: center;
+
   }
-  .projects-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-  }
-  .project-box {
-    background: #111116;
-    border: 1px solid #2a2a35;
-    border-radius: 10px;
-    overflow: hidden;
-    text-align: center;
-    cursor: pointer;
-    transition: border-color 0.2s, transform 0.2s;
-  }
-  .project-box:hover {
-    border-color: #7c5cff;
-    transform: translateY(-2px);
-  }
-  .project-box img {
-    width: 100%;
-    height: 100px;
-    object-fit: cover;
-    display: block;
-  }
-  .project-info {
-    padding: 10px 8px;
-  }
-  .project-box h3 {
-    color: #e6e6ea;
-    font-size: 0.95rem;
-    margin-bottom: 2px;
-  }
-  .project-box span {
-    color: #7c5cff;
-    font-size: 11px;
+
+  .games-section h3 {
+
+    font-size: 12px;
+
     text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: 600;
+
+    letter-spacing: 2px;
+
+    color: #8a8a99;
+
+    margin-bottom: 12px;
+
+    text-align: center;
+
   }
+
+  .games-grid, .projects-grid {
+
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 12px;
+
+  }
+
+  .game-item {
+
+    background: #111116;
+
+    border: 1px solid #2a2a35;
+
+    border-radius: 10px;
+
+    overflow: hidden;
+
+    text-align: center;
+
+    transition: border-color 0.2s, transform 0.2s;
+
+  }
+
+  .game-item:hover {
+
+    border-color: #7c5cff;
+
+    transform: translateY(-2px);
+
+  }
+
+  .game-item img {
+
+    width: 100%;
+
+    height: 100px;
+
+    object-fit: cover;
+
+    display: block;
+
+  }
+
+  .game-item img.fortnite-img {
+
+    object-fit: contain;
+
+    padding: 12px;
+
+    background: #1b1b22;
+
+  }
+
+  .game-item span {
+
+    display: block;
+
+    padding: 10px 8px;
+
+    font-weight: 600;
+
+    color: #e6e6ea;
+
+    font-size: 13px;
+
+  }
+
+
+
+  .project-box {
+
+    background: #111116;
+
+    border: 1px solid #2a2a35;
+
+    border-radius: 10px;
+
+    overflow: hidden;
+
+    text-align: center;
+
+    cursor: pointer;
+
+    transition: border-color 0.2s, transform 0.2s;
+
+  }
+
+  .project-box:hover {
+
+    border-color: #7c5cff;
+
+    transform: translateY(-2px);
+
+  }
+
+  .project-box img {
+
+    width: 100%;
+
+    height: 100px;
+
+    object-fit: cover;
+
+    display: block;
+
+  }
+
+  .project-info {
+
+    padding: 10px 8px;
+
+  }
+
+  .project-box h3 {
+
+    color: #e6e6ea;
+
+    font-size: 0.95rem;
+
+    margin-bottom: 2px;
+
+  }
+
+  .project-box span {
+
+    color: #7c5cff;
+
+    font-size: 11px;
+
+    text-transform: uppercase;
+
+    letter-spacing: 1px;
+
+    font-weight: 600;
+
+  }
+
+
 
   .back-btn {
+
     background: transparent;
+
     border: none;
+
     color: #7c5cff;
+
     cursor: pointer;
+
     font-size: 14px;
+
     font-weight: 600;
+
     margin-bottom: 16px;
+
     display: inline-flex;
+
     align-items: center;
+
     gap: 6px;
+
   }
+
   .back-btn:hover {
+
     text-decoration: underline;
+
   }
+
+
 
   .shop-list {
+
     display: flex;
+
     flex-direction: column;
+
     gap: 12px;
+
     margin-top: 10px;
+
   }
+
   .shop-item {
+
     background: #111116;
+
     border: 1px solid #2a2a35;
+
     border-radius: 10px;
+
     padding: 16px;
+
     display: flex;
+
     align-items: center;
+
     justify-content: space-between;
+
     gap: 12px;
+
   }
+
   .shop-item-info {
+
     text-align: left;
+
   }
+
   .shop-item-info h4 {
+
     color: #e6e6ea;
+
     font-size: 14px;
+
     margin-bottom: 4px;
+
   }
+
   .shop-item-info p {
+
     color: #8a8a99;
+
     font-size: 12px;
+
     margin: 0;
+
     text-align: left;
+
   }
+
   .buy-btn {
+
     background: #7c5cff;
+
     color: #fff;
+
     text-decoration: none;
+
     padding: 8px 16px;
+
     border-radius: 8px;
+
     font-size: 13px;
+
     font-weight: 600;
+
     white-space: nowrap;
+
     transition: background 0.2s;
+
   }
+
   .buy-btn:hover {
+
     background: #6342f5;
+
   }
+
   .empty-msg {
+
     text-align: center;
+
     color: #8a8a99;
+
     font-size: 14px;
+
     padding: 20px 0;
+
   }
+
 </style>
+
 </head>
+
 <body>
 
+
+
   <div id="loader">
+
     <div class="ring"></div>
+
     <div class="loader-text">Loading</div>
+
   </div>
+
+
 
   <nav>
+
     <button class="active" onclick="switchTab('home', this)">Home</button>
+
+    <button onclick="switchTab('about', this)">About Me</button>
+
     <button onclick="switchTab('shop', this)">Shop</button>
+
   </nav>
 
+
+
   <div class="view-container">
+
     <main id="home" class="page active">
+
       <div class="avatar-wrap">
+
         <div class="avatar" id="avatar">e</div>
+
         <div class="status-dot" id="statusDot"></div>
+
       </div>
+
+
 
       <h1 id="displayName">echo</h1>
+
       <p class="handle" id="statusText">Loading status...</p>
 
+
+
       <div class="activity" id="activityBox" style="display:none;">
+
         <div class="label" id="activityLabel">Playing</div>
+
         <div class="game-name" id="activityName"></div>
+
         <div class="game-detail" id="activityDetail"></div>
+
       </div>
+
+
 
       <a href="https://www.instant-gaming.com/?igr=d6wo" target="_blank" rel="noopener noreferrer" class="cheap-games-btn">
+
         Get Games For Cheap
+
       </a>
 
+
+
       <div class="links">
+
         <a class="email" href="mailto:echo@d6wo.cc">
+
           <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+
           echo@d6wo.cc
+
         </a>
+
+
 
         <a href="https://discord.com/users/788893081000345602">
+
           <svg viewBox="0 0 24 24"><path d="M20.32 4.37a19.8 19.8 0 0 0-4.89-1.52.07.07 0 0 0-.08.04c-.21.38-.44.87-.6 1.25a18.3 18.3 0 0 0-5.5 0 12.6 12.6 0 0 0-.61-1.25.08.08 0 0 0-.08-.04 19.7 19.7 0 0 0-4.88 1.52.07.07 0 0 0-.04.03C.53 9.05-.32 13.58.1 18.06c0 .02.01.04.03.05a19.9 19.9 0 0 0 6 3.03.08.08 0 0 0 .08-.03c.46-.63.87-1.3 1.22-2a.08.08 0 0 0-.04-.11 13 13 0 0 1-1.87-.9.08.08 0 0 1-.01-.12c.13-.1.25-.19.37-.29a.07.07 0 0 1 .08-.01c3.93 1.8 8.18 1.8 12.06 0a.07.07 0 0 1 .08 0c.12.1.25.2.37.3a.08.08 0 0 1 0 .12 12.3 12.3 0 0 1-1.88.89.08.08 0 0 0-.04.11c.36.7.77 1.37 1.22 2a.08.08 0 0 0 .08.03 19.8 19.8 0 0 0 6.02-3.03.08.08 0 0 0 .03-.05c.5-5.18-.84-9.68-3.55-13.66a.06.06 0 0 0-.03-.03zM8.02 15.33c-1.18 0-2.16-1.08-2.16-2.42 0-1.33.96-2.42 2.16-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.34-.96 2.42-2.16 2.42zm7.97 0c-1.18 0-2.15-1.08-2.15-2.42 0-1.33.95-2.42 2.15-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.34-.95 2.42-2.16 2.42z"/></svg>
+
           Discord
+
         </a>
+
+
 
         <a href="https://instagram.com/opticwtw">
+
           <svg viewBox="0 0 24 24"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 0 1-1.38-.9 3.7 3.7 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16-1.06-.36 2.23-.41 1.27-.06 1.65-.07 4.85-.07M12 0C8.74 0 8.33.01 7.05.07 5.78.13 4.9.33 4.14.63a5.9 5.9 0 0 0-2.13 1.38A5.9 5.9 0 0 0 .63 4.14C.33 4.9.13 5.78.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.27.26 2.15.56 2.91.3.79.72 1.46 1.38 2.13a5.9 5.9 0 0 0 2.13 1.38c.76.3 1.64.5 2.91.56C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.27-.06 2.15-.26 2.91-.56a5.9 5.9 0 0 0 2.13-1.38 5.9 5.9 0 0 0 1.38-2.13c.3-.76.5-1.64.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.27-.26-2.15-.56-2.91a5.9 5.9 0 0 0-1.38-2.13A5.9 5.9 0 0 0 19.86.63c-.76-.3-1.64-.5-2.91-.56C15.67.01 15.26 0 12 0zm0 5.84A6.16 6.16 0 1 0 12 18.16 6.16 6.16 0 0 0 12 5.84zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm7.85-10.4a1.44 1.44 0 1 1-2.88 0 1.44 1.44 0 0 1 2.88 0z"/></svg>
+
           Instagram
+
         </a>
+
       </div>
+
     </main>
+
+
+
+    <main id="about" class="page">
+
+      <div class="about-card">
+
+        <h2>About Me</h2>
+
+        <p>Hello, I am Gauge. I like to play games, play sports, and code in my free time.</p>
+
+        
+
+        <div class="games-section">
+
+          <h3>Top Games</h3>
+
+          <div class="games-grid">
+
+            <div class="game-item">
+
+              <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/730/header.jpg" alt="Counter-Strike 2">
+
+              <span>Counter-Strike 2</span>
+
+            </div>
+
+            <div class="game-item">
+
+              <img class="fortnite-img" src="https://upload.wikimedia.org/wikipedia/commons/0/0e/FortniteLogo.svg" alt="Fortnite">
+
+              <span>Fortnite</span>
+
+            </div>
+
+            <div class="game-item">
+
+              <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/1938090/header.jpg" alt="Call of Duty">
+
+              <span>Call of Duty</span>
+
+            </div>
+
+            <div class="game-item">
+
+              <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/252490/header.jpg" alt="Rust">
+
+              <span>Rust</span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </main>
+
+
 
     <main id="shop" class="page">
+
       <div class="projects-card">
+
         <div id="shopMainView">
+
           <h2>Shop</h2>
+
           <p>Select a game below to view available products.</p>
+
           <div class="projects-grid">
+
             <div class="project-box" onclick="openGameShop('cs2')">
+
               <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/730/header.jpg" alt="Counter-Strike 2">
+
               <div class="project-info">
+
                 <h3>CS2</h3>
+
                 <span>View Products</span>
+
               </div>
+
             </div>
+
             <div class="project-box" onclick="openGameShop('r6')">
+
               <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/359550/header.jpg" alt="Rainbow Six Siege">
+
               <div class="project-info">
+
                 <h3>R6</h3>
+
                 <span>View Products</span>
+
               </div>
+
             </div>
+
           </div>
+
         </div>
+
+
 
         <div id="shopDetailView" style="display: none;">
+
           <button class="back-btn" onclick="closeGameShop()">&#8592; Back to Shop</button>
+
           <h2 id="selectedGameTitle">Game</h2>
+
           <div id="shopProductsList"></div>
+
         </div>
+
       </div>
+
     </main>
+
   </div>
 
+
+
 <script>
+
 const DISCORD_ID = '788893081000345602';
 
+
+
 const STATUS_LABELS = {
+
   online:  'Online',
+
   idle:    'Idle',
+
   dnd:     'Do Not Disturb',
+
   offline: 'Offline'
+
 };
+
+
 
 const ACTIVITY_TYPES = {
+
   0: 'Playing',
+
   2: 'Listening to',
+
   3: 'Watching',
+
   4: 'Custom Status',
+
   5: 'Competing in'
+
 };
 
+
+
 function switchTab(tabId, btn) {
+
   document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+
   document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
 
+
+
   document.getElementById(tabId).classList.add('active');
+
   btn.classList.add('active');
+
 }
+
+
 
 function openGameShop(gameKey) {
+
   const mainView = document.getElementById('shopMainView');
+
   const detailView = document.getElementById('shopDetailView');
+
   const title = document.getElementById('selectedGameTitle');
+
   const list = document.getElementById('shopProductsList');
 
+
+
   mainView.style.display = 'none';
+
   detailView.style.display = 'block';
 
+
+
   if (gameKey === 'cs2') {
+
     title.textContent = 'Counter-Strike 2';
+
     list.innerHTML = `
+
       <div class="shop-list">
+
         <div class="shop-item">
+
           <div class="shop-item-info">
+
             <h4>1K+ Hour Account</h4>
+
             <p>CS2 account with over 1,000 recorded hours.</p>
+
           </div>
+
           <a class="buy-btn" href="https://discord.gg/6g6aSMenY4" target="_blank" rel="noopener noreferrer">Buy Now</a>
+
         </div>
+
       </div>
+
     `;
+
   } else if (gameKey === 'r6') {
+
     title.textContent = 'Rainbow Six Siege';
+
     list.innerHTML = `<div class="empty-msg">No products available at the moment. Check back soon!</div>`;
+
   }
+
 }
+
+
 
 function closeGameShop() {
+
   document.getElementById('shopMainView').style.display = 'block';
+
   document.getElementById('shopDetailView').style.display = 'none';
+
 }
+
+
 
 function fetchPresence() {
+
   return fetch(`https://api.lanyard.rest/v1/users/${DISCORD_ID}`)
+
     .then(r => r.json())
+
     .then(json => json.success ? json.data : null)
+
     .catch(() => null);
+
 }
+
+
 
 function setAvatar(data) {
+
   const avatarEl = document.getElementById('avatar');
+
   if (data && data.discord_user && data.discord_user.avatar) {
+
     const hash = data.discord_user.avatar;
+
     const ext = hash.startsWith('a_') ? 'gif' : 'png';
+
     avatarEl.innerHTML = `<img src="https://cdn.discordapp.com/avatars/${DISCORD_ID}/${hash}.${ext}?size=256" alt="avatar">`;
+
   }
+
 }
+
+
 
 function setStatus(data) {
+
   const dot = document.getElementById('statusDot');
+
   const text = document.getElementById('statusText');
+
   if (!data) {
+
     dot.className = 'status-dot offline';
+
     text.textContent = 'Offline';
+
     return;
+
   }
+
   const status = data.discord_status || 'offline';
+
   dot.className = `status-dot ${status}`;
+
   text.textContent = STATUS_LABELS[status] || status;
+
 }
 
+
+
 function setActivity(data) {
+
   const box = document.getElementById('activityBox');
+
   if (!data || !data.activities || data.activities.length === 0) {
+
     box.style.display = 'none';
+
     return;
+
   }
+
   const act = data.activities.find(a => a.type === 0)
+
     || data.activities.find(a => a.type === 2)
+
     || data.activities.find(a => a.type === 3)
+
     || data.activities.find(a => a.type === 4)
+
     || data.activities[0];
+
+
 
   if (!act || !act.name) { box.style.display = 'none'; return; }
 
+
+
   box.style.display = 'block';
+
   document.getElementById('activityLabel').textContent = ACTIVITY_TYPES[act.type] || 'Activity';
+
   document.getElementById('activityName').textContent = act.name;
+
   const detail = act.details || act.state || '';
+
   document.getElementById('activityDetail').textContent = detail;
+
 }
+
+
 
 function setUsername(data) {
+
   if (data && data.discord_user && data.discord_user.username) {
+
     document.getElementById('displayName').textContent = data.discord_user.username;
+
   }
+
 }
+
+
 
 async function update() {
+
   const data = await fetchPresence();
+
   setAvatar(data);
+
   setStatus(data);
+
   setActivity(data);
+
   setUsername(data);
+
 }
 
+
+
 window.addEventListener('load', () => {
+
   update();
+
   setTimeout(() => {
+
     document.getElementById('loader').classList.add('hidden');
+
   }, 1500);
+
   setInterval(update, 30000);
+
 });
+
 </script>
+
 </body>
+
 </html>
