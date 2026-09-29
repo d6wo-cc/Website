@@ -287,17 +287,137 @@
   }
   .game-item span {
     display: block;
-    padding: 6px 8px 2px;
+    padding: 6px 8px 10px;
     font-weight: 600;
     color: #e6e6ea;
     font-size: 13px;
   }
-  .game-hours {
+
+  /* Projects tab */
+  .projects-card {
+    background: #16161d;
+    border: 1px solid #2a2a35;
+    border-radius: 16px;
+    padding: 30px 24px;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  .projects-card h2 {
+    color: #e6e6ea;
+    font-size: 1.8rem;
+    margin-bottom: 18px;
+  }
+  .projects-sub {
+    color: #8a8a99;
+    font-size: 13px;
+    margin-bottom: 18px;
+  }
+  .projects-sub a { color: #4dd6ff; text-decoration: none; }
+  .projects-sub a:hover { text-decoration: underline; }
+  .repo-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 340px;
+    overflow-y: auto;
+    text-align: left;
+    padding-right: 4px;
+  }
+  .repo-list::-webkit-scrollbar { width: 6px; }
+  .repo-list::-webkit-scrollbar-thumb { background: #2a2a35; border-radius: 3px; }
+  .repo {
     display: block;
-    padding: 0 8px 10px;
-    font-size: 11px;
+    background: #111116;
+    border: 1px solid #2a2a35;
+    border-radius: 10px;
+    padding: 14px 16px;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .repo:hover {
+    border-color: #7c5cff;
+    transform: translateY(-2px);
+  }
+  .repo-name {
+    font-weight: 600;
+    color: #e6e6ea;
+    font-size: 15px;
+    margin-bottom: 4px;
+    word-break: break-word;
+  }
+  .repo-desc {
+    color: #aaa;
+    font-size: 13px;
+    line-height: 1.5;
+    margin-bottom: 8px;
+  }
+  .repo-meta {
+    display: flex;
+    gap: 14px;
+    font-size: 12px;
     color: #8a8a99;
   }
+  .repo-lang::before {
+    content: '';
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #7c5cff;
+    margin-right: 6px;
+  }
+  .repo-msg { color: #8a8a99; font-size: 14px; padding: 20px 0; text-align: center; }
+
+  /* Link confirm modal */
+  #confirmModal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 500;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease, visibility 0.25s;
+    padding: 20px;
+  }
+  #confirmModal.show { opacity: 1; visibility: visible; }
+  .confirm-box {
+    background: #16161d;
+    border: 1px solid #2a2a35;
+    border-radius: 16px;
+    padding: 28px 24px;
+    width: 100%;
+    max-width: 360px;
+    text-align: center;
+    transform: scale(0.95);
+    transition: transform 0.25s ease;
+  }
+  #confirmModal.show .confirm-box { transform: scale(1); }
+  .confirm-box h3 { font-size: 1.15rem; margin-bottom: 10px; color: #e6e6ea; }
+  .confirm-url {
+    color: #4dd6ff;
+    font-size: 13px;
+    word-break: break-all;
+    margin-bottom: 22px;
+  }
+  .confirm-actions { display: flex; gap: 12px; }
+  .confirm-actions button {
+    flex: 1;
+    padding: 11px 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid #2a2a35;
+    transition: all 0.2s ease;
+  }
+  #confirmCancel { background: #111116; color: #8a8a99; }
+  #confirmCancel:hover { color: #e6e6ea; border-color: #7c5cff; }
+  #confirmYes { background: #7c5cff; color: #fff; border-color: #7c5cff; }
+  #confirmYes:hover { background: #6a4be6; }
 </style>
 </head>
 <body>
@@ -310,6 +430,7 @@
   <nav>
     <button class="active" onclick="switchTab('home', this)">Home</button>
     <button onclick="switchTab('about', this)">About Me</button>
+    <button onclick="switchTab('projects', this)">Projects</button>
   </nav>
 
   <div class="view-container">
@@ -357,22 +478,18 @@
             <div class="game-item">
               <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/730/header.jpg" alt="Counter-Strike 2">
               <span>Counter-Strike 2</span>
-              <span class="game-hours" id="cs2-hours">Loading hrs...</span>
             </div>
             <div class="game-item">
               <img class="fortnite-img" src="https://upload.wikimedia.org/wikipedia/commons/0/0e/FortniteLogo.svg" alt="Fortnite">
               <span>Fortnite</span>
-              <span class="game-hours">-</span>
             </div>
             <div class="game-item">
               <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/1938090/header.jpg" alt="Call of Duty">
               <span>Call of Duty</span>
-              <span class="game-hours">-</span>
             </div>
             <div class="game-item">
               <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/252490/header.jpg" alt="Rust">
               <span>Rust</span>
-              <span class="game-hours" id="rust-hours">Loading hrs...</span>
             </div>
           </div>
         </div>
@@ -382,10 +499,31 @@
         </a>
       </div>
     </main>
+
+    <main id="projects" class="page">
+      <div class="projects-card">
+        <h2>Projects</h2>
+        <div class="repo-list" id="repoList">
+          <div class="repo-msg">Loading repos...</div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div id="confirmModal">
+    <div class="confirm-box">
+      <h3>Do you understand that you are going to this link?</h3>
+      <div class="confirm-url" id="confirmUrl"></div>
+      <div class="confirm-actions">
+        <button id="confirmCancel">Cancel</button>
+        <button id="confirmYes">Yes</button>
+      </div>
+    </div>
   </div>
 
 <script>
 const DISCORD_ID = '788893081000345602';
+const GITHUB_USER = 'pawnderspalace';
 
 const STATUS_LABELS = {
   online:  'Online',
@@ -401,6 +539,24 @@ const ACTIVITY_TYPES = {
   4: 'Custom Status',
   5: 'Competing in'
 };
+
+// Shown if the GitHub API can't be reached (e.g. rate limit)
+const FALLBACK_REPOS = [
+  {
+    name: 'Steam-Macos-Idler',
+    description: 'A working Steam MacOS Idler that runs multiple accounts at once that you can grind hours on.',
+    html_url: 'https://github.com/PawndersPalace/Steam-Macos-Idler',
+    language: 'JavaScript',
+    stargazers_count: 0
+  },
+  {
+    name: 'PawndersPalace',
+    description: 'Profile README',
+    html_url: 'https://github.com/PawndersPalace/PawndersPalace',
+    language: null,
+    stargazers_count: 0
+  }
+];
 
 function switchTab(tabId, btn) {
   document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
@@ -466,55 +622,65 @@ function setUsername(data) {
   }
 }
 
-async function fetchSteamHours() {
-  try {
-    const cs2Res = await fetch('https://api.allorigins.win/get?url=' + encodeURIComponent('https://steamcommunity.com/id/crzhxx/games/?tab=all&xml=1'));
-    if (cs2Res.ok) {
-      const data = await cs2Res.json();
-      const parser = new DOMParser();
-      const xmlDoc = parser.parseFromString(data.contents, 'text/xml');
-      const games = xmlDoc.querySelectorAll('game');
-      let foundCS = false;
-      games.forEach(game => {
-        const appId = game.querySelector('appID')?.textContent;
-        if (appId === '730') {
-          const hours = game.querySelector('hoursOnRecord')?.textContent;
-          if (hours) {
-            document.getElementById('cs2-hours').textContent = `${Number(hours).toLocaleString()} hrs`;
-            foundCS = true;
-          }
-        }
-      });
-      if (!foundCS) document.getElementById('cs2-hours').textContent = 'Private / 0 hrs';
-    }
-  } catch (e) {
-    document.getElementById('cs2-hours').textContent = 'Unable to load';
-  }
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, c => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[c]));
+}
 
+function renderRepos(repos) {
+  const list = document.getElementById('repoList');
+  if (!repos.length) {
+    list.innerHTML = '<div class="repo-msg">No public repos yet.</div>';
+    return;
+  }
+  list.innerHTML = repos.map(r => `
+    <a class="repo" href="${escapeHtml(r.html_url)}" target="_blank" rel="noopener noreferrer">
+      <div class="repo-name">${escapeHtml(r.name)}</div>
+      ${r.description ? `<div class="repo-desc">${escapeHtml(r.description)}</div>` : ''}
+      <div class="repo-meta">
+        ${r.language ? `<span class="repo-lang">${escapeHtml(r.language)}</span>` : ''}
+        <span>&#9733; ${r.stargazers_count || 0}</span>
+      </div>
+    </a>
+  `).join('');
+}
+
+async function fetchRepos() {
   try {
-    const rustRes = await fetch('https://api.allorigins.win/get?url=' + encodeURIComponent('https://steamcommunity.com/id/Whatzafackaplemapsbru/games/?tab=all&xml=1'));
-    if (rustRes.ok) {
-      const data = await rustRes.json();
-      const parser = new DOMParser();
-      const xmlDoc = parser.parseFromString(data.contents, 'text/xml');
-      const games = xmlDoc.querySelectorAll('game');
-      let foundRust = false;
-      games.forEach(game => {
-        const appId = game.querySelector('appID')?.textContent;
-        if (appId === '252490') {
-          const hours = game.querySelector('hoursOnRecord')?.textContent;
-          if (hours) {
-            document.getElementById('rust-hours').textContent = `${Number(hours).toLocaleString()} hrs`;
-            foundRust = true;
-          }
-        }
-      });
-      if (!foundRust) document.getElementById('rust-hours').textContent = 'Private / 0 hrs';
-    }
+    const res = await fetch(`https://api.github.com/users/${GITHUB_USER}/repos?per_page=100&sort=updated`);
+    if (!res.ok) throw new Error('GitHub API error');
+    const repos = await res.json();
+    renderRepos(repos);
   } catch (e) {
-    document.getElementById('rust-hours').textContent = 'Unable to load';
+    renderRepos(FALLBACK_REPOS);
   }
 }
+
+let pendingUrl = null;
+const confirmModal = document.getElementById('confirmModal');
+
+function closeConfirm() {
+  confirmModal.classList.remove('show');
+  pendingUrl = null;
+}
+
+document.getElementById('repoList').addEventListener('click', e => {
+  const card = e.target.closest('a.repo');
+  if (!card) return;
+  e.preventDefault();
+  pendingUrl = card.href;
+  document.getElementById('confirmUrl').textContent = pendingUrl;
+  confirmModal.classList.add('show');
+});
+
+document.getElementById('confirmYes').addEventListener('click', () => {
+  if (pendingUrl) window.open(pendingUrl, '_blank', 'noopener,noreferrer');
+  closeConfirm();
+});
+document.getElementById('confirmCancel').addEventListener('click', closeConfirm);
+confirmModal.addEventListener('click', e => { if (e.target === confirmModal) closeConfirm(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeConfirm(); });
 
 async function update() {
   const data = await fetchPresence();
@@ -526,12 +692,11 @@ async function update() {
 
 window.addEventListener('load', () => {
   update();
-  fetchSteamHours();
+  fetchRepos();
   setTimeout(() => {
     document.getElementById('loader').classList.add('hidden');
   }, 1500);
   setInterval(update, 30000);
-  setInterval(fetchSteamHours, 300000);
 });
 </script>
 </body>
