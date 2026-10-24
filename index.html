@@ -132,12 +132,17 @@ main{position:relative;z-index:1;overflow-x:clip}
 .actions .go{background:var(--accent);border-color:var(--accent);color:#202b38}
 
 /* Loader */
-.loader{position:fixed;inset:0;background:var(--bg);display:grid;place-items:center;z-index:99}
-.bar{width:140px;height:2px;background:var(--line);border-radius:2px;overflow:hidden}
-.bar i{display:block;height:100%;background:var(--accent)}
+.loader{position:fixed;inset:0;display:grid;place-items:center;z-index:99;
+  background:linear-gradient(135deg,#252a30 0%,#30363e 54%,#282d33 100%)}
+.loader-content{width:180px;text-align:center}
+.loader-mark{color:var(--text);font:800 38px/1 var(--display);letter-spacing:-.06em}
+.loader-label{margin-top:12px;color:var(--mute);font-size:14px}
+.bar{height:2px;margin-top:22px;border-radius:2px;background:var(--line);overflow:hidden}
+.bar i{display:block;width:36%;height:100%;border-radius:inherit;background:var(--accent);animation:loading 1.2s ease-in-out infinite}
+@keyframes loading{from{transform:translateX(-110%)}to{transform:translateX(290%)}}
 
 @media(max-width:480px){.brand{display:none}header{justify-content:center}nav button{padding:8px 11px;font-size:13px}}
-@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.bar i{width:42%;transform:none}}
 </style>
 </head>
 <body>
@@ -205,10 +210,19 @@ const TabBar = ({ tab, setTab }) => {
     </div>`;
 };
 
-const Loader = () => html`
-  <motion.div className="loader" exit=${{ opacity: 0 }} transition=${{ duration: .6, ease }}>
-    <div className="bar"><motion.i initial=${{ width: 0 }} animate=${{ width: '100%' }} transition=${{ duration: 1.2, ease }} /></div>
-  </motion.div>`;
+const Loader = () => {
+  const reducedMotion = useReducedMotion();
+  return html`
+    <motion.div className="loader" role="status" aria-label="Loading"
+      initial=${{ opacity: 0 }} animate=${{ opacity: 1 }} exit=${{ opacity: 0 }}
+      transition=${{ duration: reducedMotion ? .01 : .25, ease }}>
+      <div className="loader-content">
+        <div className="loader-mark" aria-hidden="true">GE</div>
+        <p className="loader-label">Loading</p>
+        <div className="bar" aria-hidden="true"><i /></div>
+      </div>
+    </motion.div>`;
+};
 
 const Name = ({ text }) => html`
   <h1 aria-label=${text}>
